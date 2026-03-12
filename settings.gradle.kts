@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "DemoApp"
 include(":app")
+include(":data-proto")
