@@ -32,3 +32,14 @@ The configuration of *proto* is located in the gradle module named `"data-proto"
 
 Repositories are responsible for delegating to different data sources and exposing data and
 operations to upper layers.
+
+## Testing
+
+### Unit Testing
+
+This project demonstrates two common testing strategies:
+
+1. **Fake Implementations**
+   A fake `DataStore` implementation is used to simulate persistence.
+2. **Mockito Implementations**
+   Repository dependencies are mocked to verify interaction behavior. 
