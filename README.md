@@ -27,3 +27,8 @@ using the [Protocol Buffers (proto)](https://protobuf.dev/) format, which provid
 - **Forware/backward compatibility** for future schema changes.
 
 The configuration of *proto* is located in the gradle module named `"data-proto"`.
+
+### Repositories
+
+Repositories are responsible for delegating to different data sources and exposing data and
+operations to upper layers.
