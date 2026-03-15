@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "dark_theme_config.proto";
+
 package dev.dl.demoapp;
 
 option java_package = "dev.dl.demoapp.data.proto";
@@ -7,4 +9,6 @@ option java_multiple_files = true;
 
 message AppPrefs {
   int32 lastOnboardingVersion = 1;
+  bool useDynamicColor = 2;
+  DarkThemeConfigProto darkThemeConfig = 3;
 }
