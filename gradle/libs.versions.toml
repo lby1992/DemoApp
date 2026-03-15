@@ -15,6 +15,8 @@ datastore = "1.2.1"
 protobuf = "4.34.0"
 protobufPlugin = "0.9.6"
 kotlinxCoroutines = "1.10.2"
+mockito = "5.23.0"
+mockitoKotlin = "6.2.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +38,9 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitAndroidX" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+mockito-core = { group = "org.mockito", name="mockito-core", version.ref = "mockito" }
+mockito-android = { group = "org.mockito", name="mockito-android", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name="mockito-kotlin", version.ref = "mockitoKotlin" }
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
