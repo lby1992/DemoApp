@@ -61,9 +61,12 @@ dependencies {
     implementation(libs.androidx.datastore.android)
     implementation(projects.dataProto)
 
+    implementation(libs.kotlinx.coroutines.android)
+
     testImplementation(libs.junit)
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.android.compiler)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
