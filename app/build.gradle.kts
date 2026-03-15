@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.datastore.android)
     implementation(projects.dataProto)
 
+    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
