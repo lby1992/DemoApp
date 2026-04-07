@@ -4,7 +4,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import dev.dl.demoapp.core.navigation.Navigator
 import dev.dl.demoapp.feature.expense.ExpenseNavKey
-import dev.dl.demoapp.feature.tasks.TodosNavKey
+import dev.dl.demoapp.feature.todos.TodosNavKey
 import kotlinx.serialization.Serializable
 
 @Serializable

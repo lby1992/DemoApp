@@ -1,4 +1,4 @@
-package dev.dl.demoapp.feature.tasks
+package dev.dl.demoapp.feature.todos
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

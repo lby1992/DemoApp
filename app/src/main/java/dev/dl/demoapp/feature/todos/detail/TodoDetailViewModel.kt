@@ -1,4 +1,4 @@
-package dev.dl.demoapp.feature.tasks.detail
+package dev.dl.demoapp.feature.todos.detail
 
 import androidx.lifecycle.ViewModel
 import dagger.assisted.Assisted

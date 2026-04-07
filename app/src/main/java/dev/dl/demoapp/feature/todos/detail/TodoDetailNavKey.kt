@@ -1,4 +1,4 @@
-package dev.dl.demoapp.feature.tasks.detail
+package dev.dl.demoapp.feature.todos.detail
 
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope

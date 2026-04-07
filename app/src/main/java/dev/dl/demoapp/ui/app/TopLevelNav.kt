@@ -15,7 +15,7 @@ import dev.dl.demoapp.core.designsystem.icon.TodoOutlined
 import dev.dl.demoapp.feature.expense.ExpenseNavKey
 import dev.dl.demoapp.feature.dashboard.DashboardNavKey
 import dev.dl.demoapp.feature.settings.SettingsNavKey
-import dev.dl.demoapp.feature.tasks.TodosNavKey
+import dev.dl.demoapp.feature.todos.TodosNavKey
 
 data class TopLevelNavItem(
     val selectedIcon: ImageVector,

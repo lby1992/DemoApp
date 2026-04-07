@@ -1,4 +1,4 @@
-package dev.dl.demoapp.feature.tasks
+package dev.dl.demoapp.feature.todos
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

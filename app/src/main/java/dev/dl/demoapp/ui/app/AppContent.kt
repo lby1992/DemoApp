@@ -31,8 +31,8 @@ import dev.dl.demoapp.feature.dashboard.dashboardEntry
 import dev.dl.demoapp.feature.expense.detail.expenseDetailEntry
 import dev.dl.demoapp.feature.expense.expenseEntry
 import dev.dl.demoapp.feature.settings.settingsEntry
-import dev.dl.demoapp.feature.tasks.detail.taskDetailEntry
-import dev.dl.demoapp.feature.tasks.todosEntry
+import dev.dl.demoapp.feature.todos.detail.taskDetailEntry
+import dev.dl.demoapp.feature.todos.todosEntry
 
 @Composable
 fun AppContent(

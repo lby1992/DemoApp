@@ -1,9 +1,9 @@
-package dev.dl.demoapp.feature.tasks
+package dev.dl.demoapp.feature.todos
 
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import dev.dl.demoapp.core.navigation.Navigator
-import dev.dl.demoapp.feature.tasks.detail.TodoDetailNavKey
+import dev.dl.demoapp.feature.todos.detail.TodoDetailNavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
