@@ -25,12 +25,33 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+    flavorDimensions += "version"
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+        create("qa") {
+            dimension = "version"
+            applicationIdSuffix = ".qa"
+            versionNameSuffix = "-qa"
+        }
+        create("prod") {
+            dimension = "version"
         }
     }
     compileOptions {
@@ -53,6 +74,7 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material.icons)
     implementation(libs.androidx.compose.material3)
 
     implementation(libs.hilt.android)
@@ -63,6 +85,11 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)

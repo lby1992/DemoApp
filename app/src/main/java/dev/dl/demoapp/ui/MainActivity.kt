@@ -5,11 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import dev.dl.demoapp.core.designsystem.theme.AppTheme
+import dev.dl.demoapp.ui.app.AppContent
+import dev.dl.demoapp.ui.app.rememberAppContentState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -20,20 +21,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainActivityScreen(viewModel)
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val isSystemDark = isSystemInDarkTheme()
+
+            AppTheme(
+                darkTheme = uiState.useDarkTheme(isSystemDark),
+                dynamicColor = uiState.dynamicColorTheming,
+            ) {
+                val appContentState = rememberAppContentState()
+
+                AppContent(
+                    appState = appContentState,
+                )
+            }
         }
-    }
-}
-
-@Composable
-private fun MainActivityScreen(viewModel: MainActivityViewModel) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val isSystemDark = isSystemInDarkTheme()
-
-    AppTheme(
-        darkTheme = uiState.useDarkTheme(isSystemDark),
-        dynamicColor = uiState.dynamicColorTheming,
-    ) {
-        // TODO emit app content
     }
 }

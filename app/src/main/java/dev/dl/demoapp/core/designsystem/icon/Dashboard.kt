@@ -1,0 +1,103 @@
+package dev.dl.demoapp.core.designsystem.icon
+
+import androidx.compose.material.icons.materialIcon
+import androidx.compose.material.icons.materialPath
+import androidx.compose.ui.graphics.vector.ImageVector
+
+val AppIcons.Dashboard: ImageVector by lazy {
+    materialIcon(name = "Dashboard") {
+        materialPath {
+            moveTo(4.0f, 13.0f)
+            horizontalLineToRelative(6.0f)
+            curveToRelative(0.55f, 0.0f, 1.0f, -0.45f, 1.0f, -1.0f)
+            lineTo(11.0f, 4.0f)
+            curveToRelative(0.0f, -0.55f, -0.45f, -1.0f, -1.0f, -1.0f)
+            lineTo(4.0f, 3.0f)
+            curveToRelative(-0.55f, 0.0f, -1.0f, 0.45f, -1.0f, 1.0f)
+            verticalLineToRelative(8.0f)
+            curveToRelative(0.0f, 0.55f, 0.45f, 1.0f, 1.0f, 1.0f)
+            close()
+            moveTo(4.0f, 21.0f)
+            horizontalLineToRelative(6.0f)
+            curveToRelative(0.55f, 0.0f, 1.0f, -0.45f, 1.0f, -1.0f)
+            verticalLineToRelative(-4.0f)
+            curveToRelative(0.0f, -0.55f, -0.45f, -1.0f, -1.0f, -1.0f)
+            lineTo(4.0f, 15.0f)
+            curveToRelative(-0.55f, 0.0f, -1.0f, 0.45f, -1.0f, 1.0f)
+            verticalLineToRelative(4.0f)
+            curveToRelative(0.0f, 0.55f, 0.45f, 1.0f, 1.0f, 1.0f)
+            close()
+            moveTo(14.0f, 21.0f)
+            horizontalLineToRelative(6.0f)
+            curveToRelative(0.55f, 0.0f, 1.0f, -0.45f, 1.0f, -1.0f)
+            verticalLineToRelative(-8.0f)
+            curveToRelative(0.0f, -0.55f, -0.45f, -1.0f, -1.0f, -1.0f)
+            horizontalLineToRelative(-6.0f)
+            curveToRelative(-0.55f, 0.0f, -1.0f, 0.45f, -1.0f, 1.0f)
+            verticalLineToRelative(8.0f)
+            curveToRelative(0.0f, 0.55f, 0.45f, 1.0f, 1.0f, 1.0f)
+            close()
+            moveTo(13.0f, 4.0f)
+            verticalLineToRelative(4.0f)
+            curveToRelative(0.0f, 0.55f, 0.45f, 1.0f, 1.0f, 1.0f)
+            horizontalLineToRelative(6.0f)
+            curveToRelative(0.55f, 0.0f, 1.0f, -0.45f, 1.0f, -1.0f)
+            lineTo(21.0f, 4.0f)
+            curveToRelative(0.0f, -0.55f, -0.45f, -1.0f, -1.0f, -1.0f)
+            horizontalLineToRelative(-6.0f)
+            curveToRelative(-0.55f, 0.0f, -1.0f, 0.45f, -1.0f, 1.0f)
+            close()
+        }
+    }
+}
+
+val AppIcons.DashboardOutlined: ImageVector by lazy {
+    materialIcon(name = "DashboardOutlined") {
+        materialPath {
+            moveTo(19.0f, 5.0f)
+            verticalLineToRelative(2.0f)
+            horizontalLineToRelative(-4.0f)
+            lineTo(15.0f, 5.0f)
+            horizontalLineToRelative(4.0f)
+            moveTo(9.0f, 5.0f)
+            verticalLineToRelative(6.0f)
+            lineTo(5.0f, 11.0f)
+            lineTo(5.0f, 5.0f)
+            horizontalLineToRelative(4.0f)
+            moveToRelative(10.0f, 8.0f)
+            verticalLineToRelative(6.0f)
+            horizontalLineToRelative(-4.0f)
+            verticalLineToRelative(-6.0f)
+            horizontalLineToRelative(4.0f)
+            moveTo(9.0f, 17.0f)
+            verticalLineToRelative(2.0f)
+            lineTo(5.0f, 19.0f)
+            verticalLineToRelative(-2.0f)
+            horizontalLineToRelative(4.0f)
+            moveTo(21.0f, 3.0f)
+            horizontalLineToRelative(-8.0f)
+            verticalLineToRelative(6.0f)
+            horizontalLineToRelative(8.0f)
+            lineTo(21.0f, 3.0f)
+            close()
+            moveTo(11.0f, 3.0f)
+            lineTo(3.0f, 3.0f)
+            verticalLineToRelative(10.0f)
+            horizontalLineToRelative(8.0f)
+            lineTo(11.0f, 3.0f)
+            close()
+            moveTo(21.0f, 11.0f)
+            horizontalLineToRelative(-8.0f)
+            verticalLineToRelative(10.0f)
+            horizontalLineToRelative(8.0f)
+            lineTo(21.0f, 11.0f)
+            close()
+            moveTo(11.0f, 15.0f)
+            lineTo(3.0f, 15.0f)
+            verticalLineToRelative(6.0f)
+            horizontalLineToRelative(8.0f)
+            verticalLineToRelative(-6.0f)
+            close()
+        }
+    }
+}
