@@ -7,9 +7,10 @@
 
 extern "C"
 {
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
-#include <libavutil/log.h>
+#include "third_party/ffmpeg/include/libavformat/avformat.h"
+#include "third_party/ffmpeg/include/libavcodec/avcodec.h"
+#include "third_party/ffmpeg/include/libavutil/log.h"
+//#include "nlohmann/json.hpp"
 }
 
 static void ffmpegLogCallback(
@@ -52,7 +53,7 @@ JNI_OnLoad(
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_dev_dl_demoapp_core_jni_NativeLib_getFfmpegVersion(JNIEnv *env, jobject thiz) {
     return avformat_version();
 }
@@ -145,4 +146,49 @@ Java_dev_dl_demoapp_core_jni_NativeLib_probeRtsp(JNIEnv *env, jobject thiz, jstr
     env->ReleaseStringUTFChars(url_, url);
 
     return env->NewStringUTF(result.c_str());
+}
+
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_dev_dl_demoapp_core_jni_NativeLib_probe(JNIEnv *env, jobject thiz, jstring jUrl) {
+    const char *url = env->GetStringUTFChars(jUrl, nullptr);
+
+    AVFormatContext *fmt = nullptr;
+
+    int ret = avformat_open_input(&fmt, url, nullptr, nullptr);
+
+    if (ret < 0) {
+        env->ReleaseStringUTFChars(jUrl, url);
+        return nullptr;
+    }
+
+    ret = avformat_find_stream_info(fmt, nullptr);
+
+    if (ret < 0) {
+        avformat_close_input(&fmt);
+        env->ReleaseStringUTFChars(jUrl, url);
+        return nullptr;
+    }
+
+    int videoStream = -1;
+    for (int i = 0; i < fmt->nb_streams; i++)
+    {
+        if (fmt->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO)
+        {
+            videoStream = i;
+            break;
+        }
+    }
+
+    if (videoStream < 0)
+    {
+        avformat_close_input(&fmt);
+        env->ReleaseStringUTFChars(jUrl, url);
+        return nullptr;
+    }
+
+    AVStream *stream = fmt->streams[videoStream];
+    AVCodecParameters *codecPar = stream->codecpar;
+
+    return nullptr;
 }

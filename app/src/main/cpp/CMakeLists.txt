@@ -14,9 +14,12 @@ add_library(
     ffmpeg-lib.cpp
 )
 
-message(STATUS "FFMPEG INCLUDE = ${CMAKE_SOURCE_DIR}/ffmpeg/include")
 target_include_directories(ffmpeg-lib PRIVATE
-    ${CMAKE_SOURCE_DIR}/ffmpeg/include
+    ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/include
+)
+
+target_include_directories(ffmpeg-lib PRIVATE
+    ${CMAKE_SOURCE_DIR}/third_party/nlohmann
 )
 
 add_library(
@@ -29,7 +32,7 @@ set_target_properties(
     avcodec
     PROPERTIES
     IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavcodec.so
+    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavcodec_baseus.so
 )
 
 add_library(
@@ -42,7 +45,7 @@ set_target_properties(
     avformat
     PROPERTIES
     IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavformat.so
+    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavformat_baseus.so
 )
 
 add_library(
@@ -55,7 +58,7 @@ set_target_properties(
     avutil
     PROPERTIES
     IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavutil.so
+    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavutil_baseus.so
 )
 
 find_library(
