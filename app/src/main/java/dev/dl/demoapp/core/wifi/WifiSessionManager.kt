@@ -113,11 +113,9 @@ class WifiSessionManager(
         password: String,
     ) {
         val current = currentSsid()
-        if (current == ssid) throw WifiException.AlreadyConnected()
+//        if (current == ssid) throw WifiException.AlreadyConnected()
 
-        if (!isWifiEnabled) throw WifiException.Disabled()
-
-        if (!isWifiEnabled) throw WifiException.Disabled()
+        if (!isWifiEnabled) throw WifiException.WifiDisabled()
 
         scope.launch {
             connectMutex.withLock {
@@ -132,7 +130,7 @@ class WifiSessionManager(
                         }
                         _state.value = WifiState.Connected(ssid)
                     } catch (e: WifiException) {
-                        _state.value = WifiState.Error(e)
+                        _state.value = WifiState.ConnectedFailed(e)
                     }
                 }
             }
@@ -238,7 +236,7 @@ class WifiSessionManager(
         password: String,
     ) {
         if (!wifiManager.isWifiEnabled && !wifiManager.setWifiEnabled(true)) {
-            throw WifiException.Disabled()
+            throw WifiException.WifiDisabled()
         }
 
         val config = WifiConfiguration()

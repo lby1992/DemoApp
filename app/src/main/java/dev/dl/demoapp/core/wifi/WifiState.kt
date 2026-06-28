@@ -1,7 +1,5 @@
 package dev.dl.demoapp.core.wifi
 
-import android.net.Network
-
 sealed interface WifiState {
     data object Idle : WifiState
     data object Connecting : WifiState
@@ -10,7 +8,7 @@ sealed interface WifiState {
     ) : WifiState
 
     data object Lost : WifiState
-    data class Error(
+    data class ConnectedFailed(
         val error: WifiException,
-    ): WifiState
+    ) : WifiState
 }

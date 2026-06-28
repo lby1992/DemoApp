@@ -2,22 +2,20 @@ package dev.dl.demoapp.wifi
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dev.dl.demoapp.core.wifi.WifiConnector
 import dev.dl.demoapp.core.wifi.WifiException
-import dev.dl.demoapp.core.wifi.WifiSessionManager
 import dev.dl.demoapp.core.wifi.WifiState
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 internal class WifiViewModel(
@@ -58,61 +56,87 @@ internal class WifiViewModel(
 
     private val _connectUiState = MutableStateFlow<WifiConnectUiState>(WifiConnectUiState.Idle)
     val connectUiState = _connectUiState.asStateFlow()
-    private val wifiSessionManager = WifiSessionManager(context)
 
-    private val _connectErrorEvent = MutableSharedFlow<WifiException>()
-
-    val connectErrorEvent = _connectErrorEvent.asSharedFlow()
-
-    private var observeConnectStateJob: Job? = null
-
-    val currentWifi = wifiSessionManager.currentSsid
-
-    fun connectWifi() {
-        observeConnectStateJob?.cancel()
-
-        observeConnectStateJob = viewModelScope.launch {
-            wifiSessionManager.state
-                .collect {
+    init {
+        viewModelScope.launch {
+            WifiSessionManager.connectState
+                .collectLatest {
+                    Log.i(TAG, "wifi state: $it")
                     when (it) {
-                        WifiState.Idle ->
-                            _connectUiState.value = WifiConnectUiState.Idle
+                        is WifiState.Connected -> {
+                            if (it.ssid == SSID) {
 
-                        WifiState.Connecting ->
+                                _connectUiState.value = WifiConnectUiState.Connected(it.ssid)
+                            } else {
+                                _connectUiState.value = WifiConnectUiState.Idle
+                            }
+                        }
+
+                        is WifiState.ConnectedFailed -> {
+                            handleWifiError(it.error)
+                        }
+
+                        WifiState.Connecting -> {
                             _connectUiState.value = WifiConnectUiState.Connecting
+                        }
 
-                        is WifiState.Connected -> _connectUiState.value =
-                            WifiConnectUiState.Connected
-
-                        is WifiState.Error ->
-                            _connectUiState.value =
-                                WifiConnectUiState.Failed(IllegalStateException(it.error.toString()))
-
-                        WifiState.Lost -> _connectUiState.value =
-                            WifiConnectUiState.Failed(IllegalStateException("Lost!!"))
+                        WifiState.Idle -> {}
+                        WifiState.Lost -> {
+                            // TODO Connection lost
+                            _connectUiState.value = WifiConnectUiState.Idle
+                        }
                     }
                 }
         }
-
-        wifiSessionManager.connect(SSID, PASSWORD)
     }
 
-    fun disconnect() {
-        wifiSessionManager.disconnect()
+    private fun handleWifiError(error: WifiException) {
+        _connectUiState.value = WifiConnectUiState.ConnectFailed(error)
+//        when(error) {
+//            is WifiException.WifiDisabled -> {
+//                _connectUiState.value = WifiConnectUiState.Failed()
+//            }
+//            is WifiException.Failed -> TODO()
+//            is WifiException.LocationDisabled -> TODO()
+//            is WifiException.PermissionMissing -> TODO()
+//            is WifiException.Unavailable -> TODO()
+//        }
     }
 
-    fun onBackFromWifiSettings() {
-        if (wifiSessionManager.isWifiEnabled) {
-            connectWifi()
-        } else {
-
+    fun checkStatus(context: Context) {
+        try {
+            WifiSessionManager.checkStatus(context)
+        } catch (e: WifiException) {
+            _connectUiState.value = WifiConnectUiState.CheckFailed(e)
         }
     }
 
-    private fun observeConnectState() {
+    fun checkStatusAgain(context: Context) {
+        try {
+            WifiSessionManager.checkStatus(context)
+        } catch (e: WifiException) {
+            _connectUiState.value = WifiConnectUiState.CheckFailed(e, true)
+        }
+    }
+
+    fun connectWifi() {
+        viewModelScope.launch(Dispatchers.IO) {
+            WifiSessionManager.connectTo(SSID, PASSWORD)
+        }
+    }
+
+    fun disconnect() {
+        WifiSessionManager.disconnect()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+
+        WifiSessionManager.cleanup()
     }
 
     companion object {
+        private const val TAG = "WifiViewModel"
         private const val SSID = "dl wireless"
         private const val PASSWORD = "zxkj123456"
 //        private const val SSID = "iPhone"
@@ -143,8 +167,16 @@ internal sealed interface WifiScanUiState {
 internal sealed interface WifiConnectUiState {
     data object Idle : WifiConnectUiState
     data object Connecting : WifiConnectUiState
-    data object Connected : WifiConnectUiState
-    data class Failed(
+    data class Connected(
+        val ssid: String,
+    ) : WifiConnectUiState
+
+    data class ConnectFailed(
         val error: Throwable,
+    ) : WifiConnectUiState
+
+    data class CheckFailed(
+        val error: WifiException,
+        val again: Boolean = false,
     ) : WifiConnectUiState
 }
