@@ -6,7 +6,7 @@ import javax.inject.Qualifier
  * A Hilt qualifier used to differentiate between various [kotlinx.coroutines.CoroutineDispatcher] implementations.
  */
 @Qualifier
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.BINARY)
 annotation class Dispatcher(val appDispatcher: AppDispatchers)
 
 /**

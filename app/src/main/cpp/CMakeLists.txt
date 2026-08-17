@@ -2,81 +2,87 @@ cmake_minimum_required(VERSION 3.22)
 
 project(demoapp)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(cmake/FFmpeg.cmake)
+
+# -------------------------------------
+# Collect sources
+# -------------------------------------
+file(GLOB_RECURSE
+    CPP_SOURCES
+    CONFIGURE_DEPENDS
+    "*.cpp"
+)
+message("CPP SOURCES:")
+foreach(src ${CPP_SOURCES})
+    message(${src})
+endforeach()
+
+# -------------------------------------
+# Native library
+# -------------------------------------
 add_library(
-    native-lib
+    NativeLib
     SHARED
-    native-lib.cpp
+    ${CPP_SOURCES}
 )
 
-add_library(
-    ffmpeg-lib
-    SHARED
-    ffmpeg-lib.cpp
+# -------------------------------------
+# Include directories
+# -------------------------------------
+target_include_directories(
+    NativeLib
+    PRIVATE
+    ${CMAKE_SOURCE_DIR}
+    ${FFMPEG_INCLUDE_DIR}
 )
 
-target_include_directories(ffmpeg-lib PRIVATE
-    ${CMAKE_SOURCE_DIR}/third_party/ffmpeg/include
-)
+# json
+# target_include_directories(ffmpeg-lib PRIVATE
+#    ${CMAKE_SOURCE_DIR}/external/nlohmann
+# )
 
-target_include_directories(ffmpeg-lib PRIVATE
-    ${CMAKE_SOURCE_DIR}/third_party/nlohmann
-)
 
-add_library(
-    avcodec
-    SHARED
-    IMPORTED
-)
-
-set_target_properties(
-    avcodec
-    PROPERTIES
-    IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavcodec_baseus.so
-)
-
-add_library(
-    avformat
-    SHARED
-    IMPORTED
-)
-
-set_target_properties(
-    avformat
-    PROPERTIES
-    IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavformat_baseus.so
-)
-
-add_library(
-    avutil
-    SHARED
-    IMPORTED
-)
-
-set_target_properties(
-    avutil
-    PROPERTIES
-    IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libavutil_baseus.so
-)
-
+# -------------------------------------
+# Android libraries
+# -------------------------------------
 find_library(
     log-lib
     log
 )
 
-target_link_libraries(
-    native-lib
-    ${log-lib}
-    avcodec
-    avformat
-    avutil
+find_library(
+        GLES-lib
+        GLESv2
 )
 
+find_library(
+        android-lib
+        android
+)
+
+
+find_library(
+        EGL-lib
+        EGL
+)
+
+# -------------------------------------
+# Link
+# -------------------------------------
 target_link_libraries(
-    ffmpeg-lib
+    NativeLib
+
     ${log-lib}
+
+    ${android-lib}
+
+    ${GLES-lib}
+
+    ${EGL-lib}
+
     avcodec
     avformat
     avutil

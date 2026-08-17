@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package dev.dl.demoapp;
+
+option java_package = "dev.dl.demoapp.data.proto";
+option java_multiple_files = true;
+
+message AuthPrefs {
+  string token = 1;
+  string userId = 2;
+}

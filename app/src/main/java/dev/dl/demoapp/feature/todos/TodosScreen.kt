@@ -14,7 +14,6 @@ fun TodosScreen(
     TodosContent(
         modifier = modifier,
         goToTodoDetail = goToTodoDetail,
-        viewModel = viewModel,
     )
 }
 
@@ -22,7 +21,6 @@ fun TodosScreen(
 private fun TodosContent(
     modifier: Modifier = Modifier,
     goToTodoDetail: (todoId: String) -> Unit,
-    viewModel: TodosViewModel,
 ) {
     DummyScreen(
         title = "Todos Screen",

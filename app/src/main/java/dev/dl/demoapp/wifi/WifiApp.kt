@@ -14,12 +14,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,67 +49,67 @@ fun WifiApp() {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                WifiScanView(viewModel)
-
-                Spacer(modifier = Modifier.height(10.dp))
+//                WifiScanView(viewModel)
+//
+//                Spacer(modifier = Modifier.height(10.dp))
 
                 WifiConnectionView(viewModel)
             }
         }
     }
 }
-
-@Composable
-private fun WifiScanView(viewModel: WifiViewModel) {
-    val uiState by viewModel.scanUiState.collectAsStateWithLifecycle()
-    val isScanning = uiState == WifiScanUiState.Scanning
-
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { grantedMap ->
-        val locationGranted = grantedMap[Manifest.permission.ACCESS_FINE_LOCATION] == true
-        val wifiGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            grantedMap[Manifest.permission.NEARBY_WIFI_DEVICES] == true
-        } else {
-            true
-        }
-        if (wifiGranted && locationGranted) {
-//            viewModel.scan()
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-    ) {
-        Text(
-            text = if (uiState is WifiScanUiState.Failure) "Error: $uiState" else "No Error",
-            color = MaterialTheme.colorScheme.error,
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Button(onClick = {
-            if (isScanning) {
-                viewModel.stop()
-            } else {
-                launcher.launch(requiredScanPermissions())
-            }
-        }) {
-            Text(if (isScanning) "Stop" else "Scan")
-        }
-        if (uiState is WifiScanUiState.Success) {
-            val scanResult = (uiState as WifiScanUiState.Success).result
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(scanResult, key = { it }) {
-                    Text(it)
-                }
-            }
-        }
-    }
-}
+//
+//@Composable
+//private fun WifiScanView(viewModel: WifiViewModel) {
+//    val uiState by viewModel.scanUiState.collectAsStateWithLifecycle()
+//    val isScanning = uiState == WifiScanUiState.Scanning
+//
+//    val launcher = rememberLauncherForActivityResult(
+//        ActivityResultContracts.RequestMultiplePermissions()
+//    ) { grantedMap ->
+//        val locationGranted = grantedMap[Manifest.permission.ACCESS_FINE_LOCATION] == true
+//        val wifiGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            grantedMap[Manifest.permission.NEARBY_WIFI_DEVICES] == true
+//        } else {
+//            true
+//        }
+//        if (wifiGranted && locationGranted) {
+////            viewModel.scan()
+//        }
+//    }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Top,
+//    ) {
+//        Text(
+//            text = if (uiState is WifiScanUiState.Failure) "Error: $uiState" else "No Error",
+//            color = MaterialTheme.colorScheme.error,
+//        )
+//        Spacer(modifier = Modifier.height(2.dp))
+//        Button(onClick = {
+//            if (isScanning) {
+//                viewModel.stop()
+//            } else {
+//                launcher.launch(requiredScanPermissions())
+//            }
+//        }) {
+//            Text(if (isScanning) "Stop" else "Scan")
+//        }
+//        if (uiState is WifiScanUiState.Success) {
+//            val scanResult = (uiState as WifiScanUiState.Success).result
+//            LazyColumn(
+//                modifier = Modifier.fillMaxSize()
+//            ) {
+//                items(scanResult, key = { it }) {
+//                    Text(it)
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 private fun WifiConnectionView(viewModel: WifiViewModel) {
@@ -120,15 +118,17 @@ private fun WifiConnectionView(viewModel: WifiViewModel) {
     ) {
         val context = LocalContext.current
 
-        val state by viewModel.connectUiState.collectAsStateWithLifecycle()
-        val canConnect =
-            state == WifiConnectUiState.Idle || state is WifiConnectUiState.ConnectFailed
-        val canDisconnect = state is WifiConnectUiState.Connected
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        val stateStr = when (state) {
-            is WifiConnectUiState.Connected -> "Connected: ${(state as WifiConnectUiState.Connected).ssid}"
+        val connectState by viewModel.connectUiState.collectAsStateWithLifecycle()
+        val canConnect = uiState.ssid.isNotBlank() && uiState.password.trim().length >= 8 &&
+                (connectState == WifiConnectUiState.Idle || connectState is WifiConnectUiState.ConnectFailed)
+        val canDisconnect = connectState is WifiConnectUiState.Connected
+
+        val stateStr = when (connectState) {
+            is WifiConnectUiState.Connected -> "Connected: ${(connectState as WifiConnectUiState.Connected).ssid}"
             WifiConnectUiState.Connecting -> "Connecting"
-            is WifiConnectUiState.ConnectFailed -> "Failed to connect: ${(state as WifiConnectUiState.ConnectFailed).error}"
+            is WifiConnectUiState.ConnectFailed -> "Failed to connect: ${formatWifiError((connectState as WifiConnectUiState.ConnectFailed).error)}"
             WifiConnectUiState.Idle -> "Idle"
             is WifiConnectUiState.CheckFailed -> "Check failed"
         }
@@ -280,6 +280,34 @@ private fun WifiConnectionView(viewModel: WifiViewModel) {
             viewModel.checkStatus(context)
         }
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextField(
+            value = uiState.ssid,
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text("SSID")
+            },
+            onValueChange = viewModel::updateSsid
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextField(
+            value = uiState.password,
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text("PASSWORD")
+            },
+            onValueChange = viewModel::updatePassword
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "SSID:【${uiState.ssid.trim()}】, PWD:【${uiState.password.trim()}】")
+
+        Spacer(modifier = Modifier.height(10.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
@@ -326,4 +354,14 @@ private fun requiredConnectPermissions(): Array<String> {
         Manifest.permission.CHANGE_NETWORK_STATE,
         Manifest.permission.ACCESS_FINE_LOCATION,
     )
+}
+
+private fun formatWifiError(e: WifiException): String {
+    return when (e) {
+        is WifiException.Failed -> "Unknown failed -> ${e.msg}"
+        is WifiException.LocationDisabled -> "Location disabled"
+        is WifiException.PermissionMissing -> "Permission missing"
+        is WifiException.Unavailable -> "unable to connect"
+        is WifiException.WifiDisabled -> "Wifi disabled"
+    }
 }

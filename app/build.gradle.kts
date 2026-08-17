@@ -23,11 +23,17 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        externalNativeBuild {
-            cmake {
-                cppFlags += ""
-            }
-        }
+//        ndk {
+//            abiFilters += listOf(
+//                "arm64-v8a",
+//                "x86_64"
+//            )
+//        }
+//        externalNativeBuild {
+//            cmake {
+//                cppFlags += ""
+//            }
+//        }
 
     }
 
@@ -68,11 +74,11 @@ android {
     buildFeatures {
         compose = true
     }
-    externalNativeBuild {
-        cmake {
-            path("src/main/cpp/CMakeLists.txt")
-        }
-    }
+//    externalNativeBuild {
+//        cmake {
+//            path("src/main/cpp/CMakeLists.txt")
+//        }
+//    }
 }
 
 dependencies {
@@ -86,10 +92,12 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material.icons)
     implementation(libs.androidx.compose.material3)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.material3.adaptive)
     ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.datastore.android)
@@ -106,6 +114,29 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    implementation("org.videolan.android:libvlc-all:3.7.2")
+
+    implementation(libs.timber)
+//    implementation(libs.androidx.paging.runtime)
+//    implementation(libs.androidx.paging.compose)
+    implementation(libs.nordicsemi.ble)
+
+    implementation(libs.androidx.splash)
+
+    implementation(platform(libs.okhttp3.bom))
+    implementation(libs.okhttp3.runtime)
+    implementation(libs.okhttp3.logging.interceptor)
+
+    implementation(platform(libs.retrofit.bom))
+    implementation(libs.retrofit.runtime)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+
+    implementation(libs.serialization.json)
+
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.exoplayer.rtsp)
 
     testImplementation(libs.junit)
     testImplementation(libs.hilt.android.testing)
